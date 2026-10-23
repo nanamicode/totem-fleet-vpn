@@ -1,0 +1,18 @@
+// Copie para acl.hujson. Modelo: só o grupo "operador" alcança os totens,
+// por SSH (22) e ADB (5555); totens não se alcançam entre si.
+{
+  "groups": {
+    "group:operador": ["seu-usuario@headscale"],
+  },
+  "tagOwners": {
+    "tag:totem": ["group:operador"],
+  },
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["group:operador"],
+      "dst": ["tag:totem:22,5555"],
+    },
+  ],
+  // Sem nenhuma regra "tag:totem -> tag:totem": totens isolados entre si.
+}

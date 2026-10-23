@@ -1,0 +1,6 @@
+# Copie para Caddyfile e troque pelo seu domínio real.
+# Caddy obtém e renova o certificado HTTPS automaticamente (Let's Encrypt).
+
+hs.seudominio.com {
+    reverse_proxy headscale:8080
+}

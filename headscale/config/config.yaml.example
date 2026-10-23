@@ -1,0 +1,35 @@
+# Copie para config.yaml e ajuste server_url para o seu domínio real.
+# Documentação completa: https://headscale.net/stable/ref/configuration/
+
+server_url: https://hs.seudominio.com
+listen_addr: 0.0.0.0:8080
+metrics_listen_addr: 127.0.0.1:9090
+
+database:
+  type: sqlite
+  sqlite:
+    path: /var/lib/headscale/db.sqlite
+
+derp:
+  server:
+    enabled: true
+    region_id: 999
+    region_code: "custom"
+    region_name: "Totem Fleet DERP"
+    stun_listen_addr: "0.0.0.0:3478"
+  urls:
+    - https://controlplane.tailscale.com/derpmap/default # relays públicos como fallback
+  auto_update_enabled: true
+  update_frequency: 24h
+
+dns:
+  magic_dns: true
+  base_domain: totens.internal
+
+# ACLs: só o operador alcança os totens; totens não se alcançam entre si.
+# policy.path aponta para o arquivo de ACL versionado neste repositório.
+policy:
+  path: /etc/headscale/acl.hujson
+
+log:
+  level: info

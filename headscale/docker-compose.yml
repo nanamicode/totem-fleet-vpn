@@ -1,0 +1,38 @@
+services:
+  headscale:
+    image: headscale/headscale:0.23
+    container_name: headscale
+    restart: unless-stopped
+    command: serve
+    ports:
+      - "3478:3478/udp" # STUN/DERP embutido (exposto direto, sem passar pelo Caddy)
+    expose:
+      - "8080"          # API/coordenação em HTTP puro, só a Caddy acessa
+    volumes:
+      - ./config:/etc/headscale
+      - ./data:/var/lib/headscale
+    networks:
+      - headscale
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: headscale-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - headscale
+    depends_on:
+      - headscale
+
+networks:
+  headscale:
+
+volumes:
+  caddy_data:
+  caddy_config:

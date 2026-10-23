@@ -1,0 +1,11 @@
+# Segredos e estado real — nunca commitar.
+headscale/config.yaml
+headscale/Caddyfile
+headscale/data/
+headscale/config/config.yaml
+headscale/config/acl.hujson
+*.state
+*authkey*
+*.pem
+*.key
+.env
