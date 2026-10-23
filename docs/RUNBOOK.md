@@ -5,7 +5,59 @@ escolhida (ver [DECISOES.md](DECISOES.md)).
 
 ## 1. Servidor de controle
 
-### Opção A — VPS gratuito (Oracle Cloud Free Tier)
+### Opção escolhida — ngrok, domínio estático gratuito
+
+Menor atrito: não exige cartão de crédito nem domínio próprio.
+
+1. **(Único passo manual, feito pelo operador)** Crie a conta gratuita em
+   https://ngrok.com (só e-mail, sem cartão).
+2. No painel, vá em **Universal Gateway → Domains** e reserve um domínio
+   estático gratuito (ex.: `totem-fleet-abc123.ngrok-free.app`).
+3. Copie o **authtoken** em https://dashboard.ngrok.com/get-started/your-authtoken.
+4. Passe o authtoken e o domínio reservado para o assistente — o resto
+   (passos 5 a 8 abaixo) é configurado automaticamente a partir daqui.
+5. Na máquina que vai rodar o Headscale (ex.: o notebook Linux Mint já com
+   acesso configurado):
+   ```bash
+   curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+   echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+   sudo apt update && sudo apt install ngrok
+   ngrok config add-authtoken <AUTHTOKEN>
+   ```
+6. Configure `~/.config/ngrok/ngrok.yml`:
+   ```yaml
+   version: "3"
+   agent:
+     authtoken: <AUTHTOKEN>
+   endpoints:
+     - name: headscale
+       url: https://<seu-dominio>.ngrok-free.app
+       upstream:
+         url: 8080
+   ```
+7. Suba como serviço (systemd):
+   ```bash
+   sudo tee /etc/systemd/system/ngrok.service >/dev/null <<'EOF'
+   [Unit]
+   Description=ngrok tunnel (Headscale)
+   After=network.target
+
+   [Service]
+   User=vinicius
+   ExecStart=/usr/local/bin/ngrok start --all --config /home/vinicius/.config/ngrok/ngrok.yml
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+   EOF
+   sudo systemctl enable --now ngrok
+   ```
+8. Igual ao Cloudflare Tunnel: **não** precisa do serviço `caddy` do
+   `docker-compose.yml` (o ngrok já termina o HTTPS) — rode só o serviço
+   `headscale`, com `server_url: https://<seu-dominio>.ngrok-free.app` e
+   `listen_addr: 0.0.0.0:8080` no `config.yaml`.
+
+### Opção alternativa A — VPS gratuito (Oracle Cloud Free Tier)
 
 1. Crie a conta em https://www.oracle.com/cloud/free/ (feito pelo operador;
    exige cartão só para verificação, não cobra no tier Always Free).
@@ -18,7 +70,7 @@ escolhida (ver [DECISOES.md](DECISOES.md)).
 4. Aponte um domínio/subdomínio seu para esse IP público (registro A).
 5. Siga a seção 2 (Headscale) usando esse IP/domínio.
 
-### Opção B — Cloudflare Tunnel (sem IP público)
+### Opção alternativa B — Cloudflare Tunnel (sem IP público, exige domínio próprio)
 
 1. Crie a conta Cloudflare e adicione seu domínio a ela (feito pelo
    operador).

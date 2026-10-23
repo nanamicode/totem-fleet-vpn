@@ -1,3 +1,8 @@
+# Cenário padrão deste projeto: ngrok (ou Cloudflare Tunnel) termina o HTTPS
+# por fora, então aqui só roda o Headscale, exposto em localhost:8080 para o
+# túnel. Se em vez disso você usar um VPS com IP público direto, adicione de
+# volta um serviço de proxy HTTPS (ex.: Caddy) na frente — ver
+# headscale/Caddyfile.example e docs/RUNBOOK.md.
 services:
   headscale:
     image: headscale/headscale:0.23
@@ -5,34 +10,10 @@ services:
     restart: unless-stopped
     command: serve
     ports:
-      - "3478:3478/udp" # STUN/DERP embutido (exposto direto, sem passar pelo Caddy)
-    expose:
-      - "8080"          # API/coordenação em HTTP puro, só a Caddy acessa
+      - "127.0.0.1:8080:8080" # API/coordenação — só o túnel local acessa
+      - "3478:3478/udp"        # STUN/DERP embutido (sem efeito atrás de
+                                # ngrok/Cloudflare Tunnel; mantido para o
+                                # cenário de VPS com IP público)
     volumes:
       - ./config:/etc/headscale
       - ./data:/var/lib/headscale
-    networks:
-      - headscale
-
-  caddy:
-    image: caddy:2-alpine
-    container_name: headscale-caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - headscale
-    depends_on:
-      - headscale
-
-networks:
-  headscale:
-
-volumes:
-  caddy_data:
-  caddy_config:

@@ -38,10 +38,10 @@ rodando em um servidor próprio.
 
 - [x] Definição da arquitetura.
 - [x] Acesso SSH por chave a uma máquina de desenvolvimento local (notebook Linux Mint).
-- [ ] Servidor de controle com IP público (VPS gratuito, ou túnel saindo de uma
-      máquina local sem IP público). Decisão pendente — ver
-      [docs/DECISOES.md](docs/DECISOES.md) e passo a passo das duas opções em
-      [docs/RUNBOOK.md](docs/RUNBOOK.md).
+- [ ] Servidor de controle com endereço público: **ngrok, domínio estático
+      gratuito** (decidido — ver [docs/DECISOES.md](docs/DECISOES.md)).
+      Falta só o operador criar a conta gratuita e gerar o authtoken —
+      passo a passo em [docs/RUNBOOK.md](docs/RUNBOOK.md).
 - [x] Headscale: docker-compose + config de exemplo em [headscale/](headscale/).
 - [x] Script de provisionamento para totens Android ([scripts/provision-totem-android.sh](scripts/provision-totem-android.sh)).
 - [x] Script de provisionamento para hosts Linux ([scripts/provision-linux.sh](scripts/provision-linux.sh)).
