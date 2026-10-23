@@ -39,12 +39,14 @@ rodando em um servidor próprio.
 - [x] Definição da arquitetura.
 - [x] Acesso SSH por chave a uma máquina de desenvolvimento local (notebook Linux Mint).
 - [ ] Servidor de controle com IP público (VPS gratuito, ou túnel saindo de uma
-      máquina local sem IP público). Decisão pendente — ver issue/notas em
-      [docs/DECISOES.md](docs/DECISOES.md).
-- [ ] Headscale rodando (docker-compose em [headscale/](headscale/)).
-- [ ] Script de provisionamento para totens Android ([scripts/provision-totem-android.sh](scripts/provision-totem-android.sh)).
-- [ ] Script de provisionamento para hosts Linux ([scripts/provision-linux.sh](scripts/provision-linux.sh)).
-- [ ] ACLs restringindo quem acessa cada totem.
+      máquina local sem IP público). Decisão pendente — ver
+      [docs/DECISOES.md](docs/DECISOES.md) e passo a passo das duas opções em
+      [docs/RUNBOOK.md](docs/RUNBOOK.md).
+- [x] Headscale: docker-compose + config de exemplo em [headscale/](headscale/).
+- [x] Script de provisionamento para totens Android ([scripts/provision-totem-android.sh](scripts/provision-totem-android.sh)).
+- [x] Script de provisionamento para hosts Linux ([scripts/provision-linux.sh](scripts/provision-linux.sh)).
+- [x] Script de provisionamento em lote a partir de inventário CSV ([scripts/provision-batch.sh](scripts/provision-batch.sh)).
+- [x] ACL de exemplo restringindo quem acessa cada totem ([headscale/config/acl.hujson.example](headscale/config/acl.hujson.example)).
 - [ ] Teste de ponta a ponta: SSH e `adb root` em um totem real, fora da rede local.
 
 ## Estrutura
