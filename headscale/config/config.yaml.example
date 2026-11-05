@@ -1,8 +1,9 @@
-# Copie para config.yaml e ajuste server_url para o seu domínio do ngrok
-# (ou outro, se usar Cloudflare Tunnel/VPS — ver docs/RUNBOOK.md).
+# Copie para config.yaml. server_url usa um hostname sslip.io gerado a partir
+# do seu IP público atual (ver scripts/check-public-ip.sh) — gratuito, sem
+# conta em lugar nenhum. Se preferir ngrok/Cloudflare/VPS, ver docs/RUNBOOK.md.
 # Documentação completa: https://headscale.net/stable/ref/configuration/
 
-server_url: https://seu-dominio.ngrok-free.app
+server_url: https://177-221-137-121.sslip.io
 listen_addr: 0.0.0.0:8080
 metrics_listen_addr: 127.0.0.1:9090
 

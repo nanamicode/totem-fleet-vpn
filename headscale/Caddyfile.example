@@ -1,6 +1,9 @@
-# Copie para Caddyfile e troque pelo seu domínio real.
-# Caddy obtém e renova o certificado HTTPS automaticamente (Let's Encrypt).
+# Copie para Caddyfile. Rode scripts/check-public-ip.sh para confirmar seu IP
+# público atual e gerar o hostname sslip.io correto (ex.: um IP 177.221.137.121
+# vira 177-221-137-121.sslip.io — resolve automaticamente para esse IP, sem
+# nenhuma conta ou DNS próprio). O Caddy emite e renova o certificado HTTPS
+# sozinho (Let's Encrypt), desde que a porta 80 esteja acessível de fora.
 
-hs.seudominio.com {
+177-221-137-121.sslip.io {
     reverse_proxy headscale:8080
 }

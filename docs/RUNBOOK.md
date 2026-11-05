@@ -5,7 +5,40 @@ escolhida (ver [DECISOES.md](DECISOES.md)).
 
 ## 1. Servidor de controle
 
-### Opção escolhida — ngrok, domínio estático gratuito
+### Opção escolhida — auto-hospedado no seu próprio IP público (zero conta de terceiro)
+
+Sem ngrok, Cloudflare, VPS ou qualquer serviço de terceiro. Ver a decisão e
+o porquê em [DECISOES.md](DECISOES.md).
+
+1. Rode `scripts/check-public-ip.sh` para descobrir seu IP público atual e o
+   hostname sslip.io correspondente (ex.: `177-221-137-121.sslip.io`).
+2. **(Único passo manual, feito pelo operador — eu não altero configurações
+   de roteador)** No painel de administração do seu roteador (geralmente
+   `192.168.1.1`), configure o encaminhamento de portas (port forwarding):
+   - `80/tcp` → IP local da máquina que vai rodar o Headscale
+   - `443/tcp` → mesmo IP
+   - `3478/udp` → mesmo IP
+3. Confirme que funcionou com um checador externo, ex. https://canyouseeme.org
+   testando a porta 443 — **se a porta não aparecer aberta, seu provedor
+   provavelmente faz CGNAT** e esse caminho não é viável; use a Opção
+   alternativa C (ngrok) ou B (Cloudflare Tunnel) abaixo.
+4. Copie `headscale/Caddyfile.example` para `Caddyfile` e
+   `headscale/config/config.yaml.example` para `config.yaml`, ajustando o
+   hostname sslip.io do passo 1 nos dois.
+5. `docker compose up -d` (ver seção 2, igual às outras opções).
+6. Agende `scripts/check-public-ip.sh --cron` (cron/Agendador de Tarefas,
+   1x por dia) para avisar se o IP de casa mudar — nesse caso, repita os
+   passos 1 e 4 com o novo IP.
+
+#### IP dinâmico — quando vale migrar para DDNS
+
+Se o IP mudar com frequência (verifique por algumas semanas com o script do
+passo 6), a manutenção manual fica chata. Nesse caso, a melhora natural é um
+DDNS gratuito (ex.: DuckDNS) — ainda sem custo, mas exige criar uma conta
+leve (só e-mail, sem cartão), igual ao ngrok abaixo. É uma escolha sua,
+avaliada só se o cenário acima se mostrar instável na prática.
+
+### Opção alternativa C — ngrok, domínio estático gratuito
 
 Menor atrito: não exige cartão de crédito nem domínio próprio.
 
